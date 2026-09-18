@@ -3069,6 +3069,7 @@ better solution to this problem.
       line-height: 14px;
       padding: 0 25px 0 10px;
       text-align: left;
+      appearance: none;
       -moz-appearance: none;
       -webkit-appearance: none;
     }
@@ -7385,6 +7386,7 @@ all of MD as it is not optimized for dense, information rich UIs.
     /* Force rendering true colors when outputing to pdf */
     * {
       -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
     }
 
     /* Misc */
@@ -8986,7 +8988,8 @@ Name: count, dtype: int64
             <h2 id="3.-Feature-Engineering">3. Feature Engineering<a class="anchor-link"
                 href="#3.-Feature-Engineering">¶</a></h2>
             <p>Kept all seven numerical measurements; no predictor one-hot encoding is needed.
-              <strong>Standardisation</strong> puts their different units on comparable scales for KNN distances.</p>
+              <strong>Standardisation</strong> puts their different units on comparable scales for KNN distances.
+            </p>
             <p>A <code>Pipeline</code> joins scaling and the classifier. In cross-validation it fits a fresh scaler on
               each fold's training rows, then transforms validation rows without learning from them. Defined the scaler
               here and fit it with the models in Model Training section 4.</p>
@@ -9031,14 +9034,16 @@ Name: count, dtype: int64
                 href="#Candidates-and-validation-design">¶</a></h3>
             <ul>
               <li><strong>Majority baseline:</strong> always chooses the most frequent training class;
-                <code>DummyClassifier</code> implements this benchmark.</li>
+                <code>DummyClassifier</code> implements this benchmark.
+              </li>
               <li><strong>Logistic regression:</strong> a linear decision boundary with inspectable coefficients; L2
                 regularisation limits complexity.</li>
               <li><strong>KNN:</strong> a flexible local boundary that may overfit with few neighbours.</li>
             </ul>
             <p>Use identical shuffled <strong>five-fold cross-validation</strong> splits inside the 80% training
               portion, checking class support. Tune <code>C = [0.01, 0.1, 1, 10, 100]</code> for logistic regression and
-              <code>k = [3, 5, 11, 21, 41]</code> for KNN; keep Euclidean distance and uniform voting fixed.</p>
+              <code>k = [3, 5, 11, 21, 41]</code> for KNN; keep Euclidean distance and uniform voting fixed.
+            </p>
             <p>Selected the highest mean validation macro-F1, using logistic regression for an exact tie. Fold SD is
               descriptive, not a confidence interval. These small grids are not exhaustive optimisation. In
               scikit-learn, larger <code>C</code> means <strong>weaker</strong> regularisation, opposite to the slides'
@@ -9468,7 +9473,8 @@ Selected settings: {'model__C': 100}
               reduces that gap. Logistic regression's best training F1 (0.9298) is close to validation.
               <code>C=100</code> is the grid's upper boundary: stronger evidence would require a wider training-only
               search, but this bounded experiment does not claim a global optimum. Selection scores may be optimistic
-              after tuning.</p>
+              after tuning.
+            </p>
           </div>
         </div>
       </div>
@@ -9647,7 +9653,8 @@ Test rows exactly matching training feature rows: 0
             <p>The selected model achieves <strong>92.91% accuracy</strong>, <strong>0.9286 macro-F1</strong>, and
               <strong>0.9823 ROC-AUC</strong>. Test macro-F1 is close to validation (0.9297). Accuracy exceeds the
               training-majority baseline's <strong>54.07%</strong> test accuracy; differences in class proportions
-              explain why this baseline differs from its training accuracy.</p>
+              explain why this baseline differs from its training accuracy.
+            </p>
             <p>There are <strong>54 errors out of 762 grains</strong>: 24 Osmancik grains labelled Cammeo and 30 Cammeo
               grains labelled Osmancik. Cammeo's recall is <strong>91.43%</strong>, just behind Osmancik's recall
               (<strong>94.17%</strong>), so overall good results but there are still some missed grains in both
